@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="eng" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title>ReTone</title>
+</head>
+<body style="font-family:sans-serif;max-width:600px;margin:2rem auto">
+  <h1>ReTone</h1>
+  <form method="post">
+    <label>Your sentence:</label><br>
+    <textarea name="text" rows="5" cols="60" required></textarea><br><br>
+
+    <label>Select your tone:</label>
+    <select name="tone">
+      <option value="serious">Serious</option>
+      <option value="friendly">Friendly</option>
+      <option value="humorous">Humorous</option>
+      <option value="loving">Loving</option>
+    </select><br><br>
+
+    <button type="submit">ReTone</button>
+  </form>
+
+  {% if result %}
+  <hr>
+  <p>{{ result }}</p>
+  {% endif %}
+</body>
+</html>
