@@ -19,7 +19,7 @@
         <textarea id="text" placeholder="Type your sentence..." required></textarea>
 
         <div class="tone-row">
-            <label for="tone">Select tone:</label>
+            <!--<label for="tone">Select tone:</label>-->
             <select id="tone">
               <option value="serious">Serious</option>
               <option value="friendly">Friendly</option>
@@ -32,7 +32,8 @@
         <span class="muted" id="status"></span>
       </form>
 
-      <div id="result" class="result" style="display:none;"></div>
+      <div id="result" class="result"></div>
+      <button id="copyBtn">Copy</button>
       <div id="error" class="error"></div>
     </main>
   </div>
@@ -67,7 +68,7 @@
 
             resultEl.style.display = 'block';
             resultEl.textContent = data.result;
-            statusEl.textContent = 'Done.';
+            statusEl.textContent = 'Done';
         } catch (err) {
           errorEl.textContent = err.message || 'Something went wrong';
           statusEl.textContent = '';

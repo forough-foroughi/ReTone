@@ -77,6 +77,16 @@ button:disabled { opacity: .6; cursor: not-allowed; }
   white-space: pre-wrap;
 }
 
+#copyBtn {
+    display: none;
+    margin-top: 5rem;
+    padding: .4rem .8rem;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+}
+#copyBtn:hover {background: #f6f6f6;}
 
 .tone-row{
     display:flex;
