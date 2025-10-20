@@ -4,76 +4,77 @@
   <meta charset="utf-8">
   <title>ReTone</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <style>
-    body { font-family:sans-serif; max-width:600px; margin:2rem auto }
-    textarea { width:100%; height:140px }
-    .result { white-space:pre-wrap; border:1px solid #ddd; padding:1rem; border-radius:8px; margin-top:1rem }
-    .error { color:#b00020; margin-top:.5rem }
-    .muted { color:#666; font-size:.9rem }
-  </style>
+  
 </head>
 <body>
-  <h1>
-    <img class="logo" src="/branding/retone-logo.png" alt="ReTone" width="140" height="140">
-  </h1>
+  <div class="app-container"> 
+    <header>
+      <img class="logo" src="/branding/retone-logo.png" alt="ReTone" width="120" height="120">
+      <p class="tagline">Say it softly. Mean it clearly.</p>
+    </header>   
 
-  <form id="retone-form">
-    <label>Your sentence:</label><br>
-    <textarea id="text" placeholder="Type your sentence..." required></textarea><br><br>
+    <main>
+      <form id="retone-form">
+        <label for="text">Your sentence:</label>
+        <textarea id="text" placeholder="Type your sentence..." required></textarea>
 
-    <label>Select your tone:</label>
-    <select id="tone">
-      <option value="serious">Serious</option>
-      <option value="friendly">Friendly</option>
-      <option value="humorous">Humorous</option>
-      <option value="loving">Loving</option>
-    </select><br><br>
+        <div class="tone-row">
+            <label for="tone">Select tone:</label>
+            <select id="tone">
+              <option value="serious">Serious</option>
+              <option value="friendly">Friendly</option>
+              <option value="humorous">Humorous</option>
+              <option value="loving">Loving</option>
+            </select>
+        </div>
 
-    <button type="submit" id="submitBtn">ReTone</button>
-    <span class="muted" id="status"></span>
-  </form>
-  <div id="result" class="result" style="display:none;"></div>
-  <div id="error" class="error"></div>
+        <button type="submit" id="submitBtn">ReTone</button>
+        <span class="muted" id="status"></span>
+      </form>
 
-<script>
-const form = document.getElementById('retone-form');
-const textEl = document.getElementById('text');
-const toneEl = document.getElementById('tone');
-const resultEl = document.getElementById('result');
-const statusEl = document.getElementById('status');
-const errorEl = document.getElementById('error');
-const submitBtn = document.getElementById('submitBtn');
+      <div id="result" class="result" style="display:none;"></div>
+      <div id="error" class="error"></div>
+    </main>
+  </div>
 
-form.addEventListener('submit', async (e) => {
-  e.preventDefault(); // نذار فرم به / پست کنه
-  errorEl.textContent = '';
-  statusEl.textContent = 'Working…';
-  submitBtn.disabled = true;
+  <script>
+    const form = document.getElementById('retone-form');
+    const textEl = document.getElementById('text');
+    const toneEl = document.getElementById('tone');
+    const resultEl = document.getElementById('result');
+    const statusEl = document.getElementById('status');
+    const errorEl = document.getElementById('error');
+    const submitBtn = document.getElementById('submitBtn');
 
-  try {
-    const res = await fetch('/api/retone', {
-      method: 'POST',
-      headers: { 'Content-Type':'application/json' },
-      body: JSON.stringify({
-        text: textEl.value,
-        tone: toneEl.value
-      })
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault(); 
+        errorEl.textContent = '';
+        statusEl.textContent = 'Working…';
+        submitBtn.disabled = true;
+
+        try {
+            const res = await fetch('/api/retone', {
+                method: 'POST',
+                headers: { 'Content-Type':'application/json' },
+                body: JSON.stringify({
+                    text: textEl.value,
+                    tone: toneEl.value
+                })
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data?.error || 'Request failed');
+
+            resultEl.style.display = 'block';
+            resultEl.textContent = data.result;
+            statusEl.textContent = 'Done.';
+        } catch (err) {
+          errorEl.textContent = err.message || 'Something went wrong';
+          statusEl.textContent = '';
+        } finally {
+          submitBtn.disabled = false;
+        }
     });
-
-    const data = await res.json();
-    if (!res.ok) throw new Error(data?.error || 'Request failed');
-
-    resultEl.style.display = 'block';
-    resultEl.textContent = data.result;
-    statusEl.textContent = 'Done.';
-  } catch (err) {
-    resultEl.style.display = 'none';
-    errorEl.textContent = err.message || 'Something went wrong';
-    statusEl.textContent = '';
-  } finally {
-    submitBtn.disabled = false;
-  }
-});
-</script>
+  </script>
 </body>
 </html>
