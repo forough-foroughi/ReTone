@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>ReTone</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <style>
     body { font-family:sans-serif; max-width:600px; margin:2rem auto }
     textarea { width:100%; height:140px }
@@ -12,7 +13,9 @@
   </style>
 </head>
 <body>
-  <h1>ReTone</h1>
+  <h1>
+    <img class="logo" src="/branding/retone-logo.png" alt="ReTone" width="140" height="140">
+  </h1>
 
   <form id="retone-form">
     <label>Your sentence:</label><br>

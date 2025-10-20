@@ -1,13 +1,16 @@
 import os
 import requests
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 from dotenv import load_dotenv
+
 
 # Load environment variables from .env
 load_dotenv()
 
 # Create Flask app
 app = Flask(__name__)
+
+BRANDING_DIR = os.path.join(app.root_path, '..', 'branding')
 
 API_KEY = os.getenv("OPENROUTER_API_KEY")
 MODEL = os.getenv("RETONE_MODEL")
@@ -31,7 +34,12 @@ SYSTEM = (
 def index():
     return render_template("index.html")
 
-# 
+BRANDING_DIR = os.path.join(app.root_path, '..', 'branding')
+
+@app.route('/branding/<path:filename>')
+def branding_static(filename):
+    return send_from_directory(BRANDING_DIR, filename)
+ 
 @app.post("/api/retone")
 def api_retone():
 
