@@ -1,0 +1,130 @@
+# Default values for retone.
+
+replicaCount: 1
+
+image:
+  repository: 242242/retone
+  pullPolicy: IfNotPresent
+  tag: v0.1
+
+imagePullSecrets: []
+
+service:
+  type: ClusterIP
+  port: 80
+  targetport: 5000
+
+ports:
+  containerport: 5000
+
+ingress:
+  enabled: true
+  className: traefik
+  hosts:
+    - host: retone.forough-foroughi.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+resources: 
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+env:
+  RETONE_MODEL: "tngtech/deepseek-r1t2-chimera:free"
+
+secretEnv:
+  OPENROUTER_API_KEY: 
+    secretName: retone-secrets
+    key: OPENROUTER_API_KEY
+
+#livenessProbe:
+#  httpGet:
+#    path: /
+#    port: http
+#readinessProbe:
+#  httpGet:
+#    path: /
+#    port: http
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+volumes: []
+# - name: foo
+#   secret:
+#     secretName: mysecret
+#     optional: false
+
+volumeMounts: []
+# - name: foo
+#   mountPath: "/etc/foo"
+#   readOnly: true
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  automount: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podLabels: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs:
+  - name: gateway
+    sectionName: http
+    # namespace: default
+  hostnames:
+  - chart-example.local
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /headers
+  #   filters:
+  #   - type: RequestHeaderModifier
+  #     requestHeaderModifier:
+  #       set:
+  #       - name: My-Overwrite-Header
+  #         value: this-is-the-only-value
+  #       remove:
+  #       - User-Agent
+  # - matches:
+  #   - path:
+  #       type: PathPrefix
+  #       value: /echo
+  #     headers:
+  #     - name: version
+  #       value: v2
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
