@@ -45,15 +45,16 @@ resource "helm_release" "retone" {
         value = var.host
     },
     {
-        name = "ingress.hosts[0].path"
+        name = "ingress.hosts[0].paths[0].path"
         value = "/"
     },
     {
-        name = "ingress.hosts[0].pathType"
-        value = "prefix"
+        name = "ingress.hosts[0].paths[0].pathType"
+        value = "Prefix"
     }
   ]
 }
+
 
 
 
