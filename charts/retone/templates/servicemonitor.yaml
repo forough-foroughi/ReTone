@@ -1,0 +1,18 @@
+{{- if .Values.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "retone.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    release: {{ .Values.serviceMonitor.releaseLabel }}  # must match your Prometheus Operator selector
+spec:
+  namespaceSelector:
+    matchNames: [ "{{ .Release.Namespace }}" ]
+  selector:
+    matchLabels: {{- include "retone.selectorLabels" . | nindent 6 }}
+  endpoints:
+    - port: http
+      path: {{ .Values.serviceMonitor.path }}
+      interval: {{ .Values.serviceMonitor.interval }}
+{{- end }}
