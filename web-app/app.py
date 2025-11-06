@@ -1,6 +1,7 @@
 import os
-import requests
+import requests, time
 from flask import Flask, render_template, request, jsonify, send_from_directory
+from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
 from dotenv import load_dotenv
 
 
@@ -12,6 +13,9 @@ app = Flask(__name__)
 
 API_KEY = os.getenv("OPENROUTER_API_KEY")
 MODEL = os.getenv("RETONE_MODEL")
+
+REQUESTS = Counter("retone_http_requests_total", "HTTP requests", ["method", "route", "status"])
+LATENCY  = Histogram("retone_request_latency_seconds", "Latency(s)", ["route"])
 
 # Map simple UI tone keys to descriptive labels for the promp
 TONE_MAP = {
@@ -27,8 +31,36 @@ SYSTEM = (
     "keeping meaning, adding politeness and clarity. Output only the rewritten sentence."
 )
 
-# Render the HTML page (form + JS that POSTs to /api/retone)
-@app.route("/")
+
+@app.before_request
+def _start_timer():
+    request._t0 = time.perf_counter()
+
+
+@app.after_request
+def _record(resp):
+    # stable route label (avoids high-cardinality)
+    route = getattr(getattr(request, "url_rule", None), "rule", "unknown")
+    # latency
+    t0 = getattr(request, "_t0", None)
+    if t0 is not None:
+        LATENCY.labels(route=route).observe(time.perf_counter() - t0)
+    # counters
+    REQUESTS.labels(
+        method=request.method,
+        route=route,
+        status=str(resp.status_code)
+    ).inc()
+    return resp
+
+
+@app.get("/metrics")
+def metrics():
+    return Response(generate_latest(), mimetype=CONTENT_TYPE_LATEST)
+
+
+# Render the HTML page (form + everything POSTs to /api/retone)
+@app.get("/")
 def index():
     return render_template("index.html")
 
@@ -52,7 +84,7 @@ def api_retone():
         r = requests.post(
             "https://openrouter.ai/api/v1/chat/completions",
             headers={
-                "Authorization": f"Bearer {API_KEY}",   # API key from .env
+                "Authorization": f"Bearer {API_KEY}",   
                 "Content-Type": "application/json",
             },
             json={
@@ -68,10 +100,10 @@ def api_retone():
         # Raise an HTTPError if status is not 2xx
         r.raise_for_status()
 
-        # 7.7) Extract the generated text from the OpenRouter/OpenAI-compatible schema
+        # Extract the generated text from the AI-Engin schema
         result = r.json()["choices"][0]["message"]["content"].strip()
 
-        # 7.8) Return JSON back to the frontend
+        # Return JSON back to the frontend
         return jsonify(result=result, tone=tone_key)
 
     except Exception as e:
@@ -80,4 +112,4 @@ def api_retone():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
