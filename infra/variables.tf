@@ -25,7 +25,7 @@ variable "image_repo" {
 
 variable "image_tag" { 
     type = string  
-    default = "v0.1" 
+    default = "v0.2" 
 }
 
 variable "secret_name" { 

@@ -51,6 +51,25 @@ resource "helm_release" "retone" {
     {
         name = "ingress.hosts[0].paths[0].pathType"
         value = "Prefix"
+    },
+    {
+        name = "serviceMonitor.enabled"
+        value = "true"
+    },
+    {
+        name = "serviceMonitor.releaseLabel"
+        value = "kube-prometheus-stack"
+    },
+    {
+        name = "serviceMonitor.path"
+        value = "/metrics"
+    },
+    {
+        name = "serviceMonitor.interval"
+        value = "30s"
+
+
+        
     }
   ]
 }
