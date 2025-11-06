@@ -2,3 +2,8 @@ script.sh
 web-app/requirements.txt
 web-app/.env
 web-app/.venv
+infra/.terraform
+infra/terraform.tfstate
+infra/terraform.tfstate.backup
+infra/.terraform.lock.hcl
+
