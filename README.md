@@ -16,17 +16,21 @@ Python · Flask · HTML/CSS
 and a lot of empathy for real-world conversations ❤️
 
 **What to monitor in ReTone:**
+
 App (Flask)
 - HTTP requests per second
 - Error rate (4xx/5xx), esp. 429 from upstream
 - Latency (p50/p90/p99)
 - External calls: OpenRouter success/error/latency
+
 Kubernetes/Container
 - Pod restarts
 - CPU / Memory (requests vs usage)
 - Readiness/Liveness probe failures
+
 Ingress (Traefik)
 - Requests, errors, latency per route/host
+
 Uptime
 - Synthetic check (blackbox-exporter) to public URL
 
