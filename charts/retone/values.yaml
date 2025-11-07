@@ -45,9 +45,12 @@ secretEnv:
 
 serviceMonitor:
   enabled: true
-  releaseLabel: kube-prometheus-stack   
+  # set this to the Prometheus release label so the Prometheus instance's
+  # `serviceMonitorSelector.matchLabels` will discover this ServiceMonitor.
+  # In this cluster Prometheus uses `release: kps`.
+  releaseLabel: kps
   path: /metrics
-  interval: 15s
+  interval: 30s
 
 #livenessProbe:
 #  httpGet:

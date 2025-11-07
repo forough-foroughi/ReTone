@@ -58,7 +58,7 @@ resource "helm_release" "retone" {
     },
     {
         name = "serviceMonitor.releaseLabel"
-        value = "kube-prometheus-stack"
+        value = "kps"
     },
     {
         name = "serviceMonitor.path"
@@ -67,9 +67,6 @@ resource "helm_release" "retone" {
     {
         name = "serviceMonitor.interval"
         value = "30s"
-
-
-        
     }
   ]
 }
