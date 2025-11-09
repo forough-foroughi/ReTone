@@ -53,3 +53,8 @@ variable "service_targetPort" {
     type = string  
     default = "5000" 
 }
+
+variable "grafana_dashboard_config_path" {
+    type = string
+    default = "../monitoring/retone-dashboard.json"
+}

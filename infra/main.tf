@@ -72,7 +72,19 @@ resource "helm_release" "retone" {
 }
 
 
+resource "kubernetes_config_map" "retone_graghana_dashboard" {
+  metadata {
+    name      = "retone-dashboard"
+    namespace = "monitoring"                 # kube-prom-stack namespace
+    labels = {
+      "grafana_dashboard" = "1"              # matches sidecar.dashboards.label
+    }
+  }
 
+  data = {
+    "retone-dashboard.json" = file("${path.module}/${var.grafana_dashboard_config_path}")
+  }
+}
 
 
 
