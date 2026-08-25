@@ -1,11 +1,14 @@
 
 <p align="center">
-  <img src="web-app/static/branding/retone-logo.png" alt="ReTone" width="180">
+  <a href="http://retone.forough-foroughi.com/" target="_blank">
+    <img src="web-app/static/branding/retone-logo.png" alt="ReTone" width="180">
+  </a>
 </p>
 
 <p align="center"><em>Say it softly. Mean it clearly.</em></p>
 
 ---
+Click here
 
 **ReTone** is an AI-powered communication assistant that helps you rephrase your messages with the right tone.  
 Simply type your raw sentence, choose the tone you want to convey — *Serious, Friendly, Humorous, and Loving* —  
